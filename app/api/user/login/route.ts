@@ -5,7 +5,8 @@ import ResponseNormalize from "@/utils/responseNormalize";
 export async function POST(request: Request) {
     const body: { username: string, password: string } = await request.json()
     const token = jwt.sign(body, 'secret', {
-        expiresIn: 60 * 60
+        expiresIn: 60 * 60,
+        algorithm: 'HS256'
     })
     return NextResponse.json(ResponseNormalize.status(200).json({ token }))
 }
