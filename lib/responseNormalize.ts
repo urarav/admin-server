@@ -8,17 +8,17 @@ class ResponseNormalize {
         this.data = json
     }
 
-    public status(status: number) {
+    public status(status: number): this {
         this.code = status
         return this
     }
 
-    public json(json: unknown) {
+    public json(json: unknown): this {
         this.data = json
         return this
     }
 
-    public msg(msg: string) {
+    public msg(msg: string): this {
         this.message = msg
         return this
     }

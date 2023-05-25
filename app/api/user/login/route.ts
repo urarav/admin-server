@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
-import jwt from 'jsonwebtoken'
-import ResponseNormalize from "@/utils/responseNormalize";
+import ResponseNormalize from "@/lib/responseNormalize";
+import { generateToken } from "@/lib/auth";
 
 export async function POST(request: Request) {
-    const body: { username: string, password: string } = await request.json()
-    const token = jwt.sign(body, 'secret', {
-        expiresIn: 60 * 60,
-        algorithm: 'HS256'
-    })
-    return NextResponse.json(ResponseNormalize.status(200).json({ token }))
+    try {
+        const body = await request.json()
+        const token = await generateToken(body)
+        return new Response(ResponseNormalize.status(200).json({ token }).stringify(), {
+            status: 200,
+            headers: {
+                'Set-Cookie': `username=${encodeURIComponent(body.username)}`
+            }
+        })
+    } catch (e: any) {
+        return NextResponse.json(ResponseNormalize.status(500).msg(e.message))
+    }
 }
